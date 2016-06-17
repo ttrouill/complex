@@ -9,7 +9,6 @@ import efe.tools as tools
 
 if __name__ =="__main__":
 
-	logger.info(tools.cur_path)
 	#Load data, ensure that data is at path: 'path'/'name'/[train|valid|test].txt
 	wn18exp = build_data(name = 'wn18',path = tools.cur_path + '/datasets/')
 

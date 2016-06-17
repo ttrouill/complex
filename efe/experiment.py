@@ -38,7 +38,7 @@ class Experiment(object):
 
 		logger.info("Nb entities: " + str(self.n_entities))
 		logger.info( "Nb relations: " + str(self.n_relations))
-		logger.info( "Nb obs rels: " + str(train.indexes.shape[0]))
+		logger.info( "Nb obs triples: " + str(train.indexes.shape[0]))
 		
 		self.scorer = Scorer(train, valid, test, compute_ranking_scores)
 		
