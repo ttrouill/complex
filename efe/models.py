@@ -198,6 +198,8 @@ class Abstract_Model(object):
 							best_valid_ap = res.ap
 
 			it += 1
+			if it >= hparams.max_iter: #Avoid downhill resetting the parameters when max_iter is reached
+				break
 
 
 
