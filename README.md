@@ -3,7 +3,7 @@
 This repository contains the code for experiments in the paper:
 
 ```
-Complex Embeddings for Simple Link Prediction
+[Complex Embeddings for Simple Link Prediction](http://jmlr.org/proceedings/papers/v48/trouillon16.pdf)
 Théo Trouillon, Johannes Welbl, Sebastian Riedel, Éric Gaussier and Guillaume Bouchard, ICML 2016.
 ```
 
@@ -14,7 +14,7 @@ First clone the repository:
 git clone https://github.com/ttrouill/complex.git
 ```
 
-The code dependends on downhill ( https://github.com/lmjohns3/downhill ),
+The code dependends on [downhill](https://github.com/lmjohns3/downhill),
 a theano based Stochastic Gradient Descent implementation.
 
 Install it, along with other dependencies with:
@@ -45,6 +45,20 @@ By default, it runs the ComplEx (Complex Embeddings) model, edit the files and u
 To run on GPU (approx 5x faster), simply add the following theano flag before the python call:
 ```
 THEANO_FLAGS='device=gpu' python fb15k_run.py
+```
+
+## Citing ComplEx
+
+If you use this package for published work, please cite:
+```
+@inproceedings{trouillon2016,
+author = {Trouillon, Th\'eo and Welbl, Johannes and Riedel, Sebastian and Gaussier, \'Eric and Bouchard, Guillaume},
+booktitle = {International Conference on Machine Learning (ICML)},
+title = {{Complex embeddings for simple link prediction}},
+volume={48},
+pages={2071--2080},
+year = {2016}
+}
 ```
 
 ## License
