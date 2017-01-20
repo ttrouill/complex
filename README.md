@@ -2,10 +2,8 @@
 
 This repository contains the code for experiments in the paper:
 
-```
-[Complex Embeddings for Simple Link Prediction](http://jmlr.org/proceedings/papers/v48/trouillon16.pdf)
+[Complex Embeddings for Simple Link Prediction](http://jmlr.org/proceedings/papers/v48/trouillon16.pdf),
 Théo Trouillon, Johannes Welbl, Sebastian Riedel, Éric Gaussier and Guillaume Bouchard, ICML 2016.
-```
 
 ## Install 
 
@@ -52,12 +50,12 @@ THEANO_FLAGS='device=gpu' python fb15k_run.py
 If you use this package for published work, please cite:
 ```
 @inproceedings{trouillon2016,
-author = {Trouillon, Th\'eo and Welbl, Johannes and Riedel, Sebastian and Gaussier, \'Eric and Bouchard, Guillaume},
-booktitle = {International Conference on Machine Learning (ICML)},
-title = {{Complex embeddings for simple link prediction}},
-volume={48},
-pages={2071--2080},
-year = {2016}
+	author = {Trouillon, Th\'eo and Welbl, Johannes and Riedel, Sebastian and Gaussier, \'Eric and Bouchard, Guillaume},
+	booktitle = {International Conference on Machine Learning (ICML)},
+	title = {{Complex embeddings for simple link prediction}},
+	volume={48},
+	pages={2071--2080},
+	year = {2016}
 }
 ```
 
