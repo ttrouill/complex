@@ -47,9 +47,9 @@ THEANO_FLAGS='device=gpu' python fb15k_run.py
 
 ## Citing ComplEx
 
-If you use this package for published work, please cite:
+If you use this package for published work, please cite the paper. Here is the BibTeX:
 ```
-@inproceedings{trouillon2016,
+@inproceedings{trouillon2016complex,
 	author = {Trouillon, Th\'eo and Welbl, Johannes and Riedel, Sebastian and Gaussier, \'Eric and Bouchard, Guillaume},
 	booktitle = {International Conference on Machine Learning (ICML)},
 	title = {{Complex embeddings for simple link prediction}},
