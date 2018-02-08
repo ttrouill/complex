@@ -1,3 +1,4 @@
+import scipy.io
 import logging
 logging.basicConfig()
 import downhill.base
@@ -46,3 +47,13 @@ if __name__ =="__main__":
 
 	#Print best averaged metrics per relation:
 	wn18exp.print_best_MRR_and_hits_per_rel()
+
+
+
+	#Save ComplEx embeddings (last trained model, not best on grid search if multiple embedding sizes and lambdas)
+	#e1 = wn18exp.models["Complex_Logistic_Model"][0].e1.get_value(borrow=True)
+	#e2 = wn18exp.models["Complex_Logistic_Model"][0].e2.get_value(borrow=True)
+	#r1 = wn18exp.models["Complex_Logistic_Model"][0].r1.get_value(borrow=True)
+	#r2 = wn18exp.models["Complex_Logistic_Model"][0].r2.get_value(borrow=True)
+	#scipy.io.savemat('complex_embeddings.mat', \
+	#		{'entities_real' : e1, 'relations_real' : r1, 'entities_imag' : e2, 'relations_imag' : r2  })
