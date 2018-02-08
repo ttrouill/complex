@@ -4,6 +4,7 @@ This repository contains the code of the main experiments presented in the paper
 
 [Complex Embeddings for Simple Link Prediction](http://jmlr.org/proceedings/papers/v48/trouillon16.pdf),
 Théo Trouillon, Johannes Welbl, Sebastian Riedel, Éric Gaussier and Guillaume Bouchard, ICML 2016.
+
 [Knowledge Graph Completion via Complex Tensor Factorization](http://www.jmlr.org/papers/volume18/16-563/16-563.pdf),
 Théo Trouillon, Christopher R. Dance, Éric Gaussier, Johannes Welbl, Sebastian Riedel and Guillaume Bouchard, JMLR 2017.
 
@@ -50,7 +51,7 @@ THEANO_FLAGS='device=gpu' python fb15k_run.py
 
 ## Export the produced embeddings
 
-Simply uncomment the last lines in `fb15k_run.py` and `wn18_run.py`, that will save the embeddings of the ComplEx model in the common matlab `.mat` format.
+Simply uncomment the last lines in `fb15k_run.py` and `wn18_run.py` (and the `import scipy.io` line (requires scipy module)), this will save the embeddings of the ComplEx model in the common matlab `.mat` format.
 If you want to save the embeddings of other models, just edit the embedding variable names corresponding to the desired model (see `models.py`).
 
 
@@ -69,7 +70,7 @@ fb15kexp = build_data(name = 'your_dataset_folder_name',path = tools.cur_path + 
 ## Implement your own model
 
 
-Models are defined as classes in `models.py`, that all inherit the class `Abstract_Model` defined in the same file. The `Abstract_Model` class handles all the common stuff (training functions, ...), and child classes (the actual models) just needs to define their embeddings shape and their scoring function and loss function.
+Models are defined as classes in `models.py`, that all inherit the class `Abstract_Model` defined in the same file. The `Abstract_Model` class handles all the common stuff (training functions, ...), and child classes (the actual models) just need to define their embeddings shape and initialization, and their scoring and loss function.
 
 To properly understand the following, one must be comfortable with [Theano basics](http://deeplearning.net/software/theano/library/tensor/basic.html).
 
@@ -100,11 +101,11 @@ def define_loss(self):
 ```
 The corresponding expressions must be written in their batched form, i.e. to compute the scores of multiple triples at once. For a given batch, the corresponding embeddings are retrieved with `self.e[self.rows,:]`, `self.r[self.cols,:]` and `self.e[self.tubes,:]`.
 
-Then in the case of the DistMult model, the trilinear product between these embeddings is computed, here by doing first two element-wise multiplications and then a sum over the columns in the `self.pred_func` expression. The `self.pred_func` expression must yield a vector of the size of the batch.
+In the case of the DistMult model, the trilinear product between these embeddings is computed, here by doing first two element-wise multiplications and then a sum over the columns in the `self.pred_func` expression. The `self.pred_func` expression must yield a vector of the size of the batch (the size of `self.rows`, `self.cols`, ...).
 The loss defined in `self.loss` is the squared-loss here (see the `DistMult_Logistic_Model` class for the logistic loss), and is averaged over the batch, as the `self.loss` expression must yield a scalar value.
 The regularization defined here is the L2 regularization over the corresponding embeddings of the batch, and must also yield a scalar value.
 
-That's all you need to define your tensor factorization model! All gradient computation is handled by Theano auto-differentiation, and all the training functions by the [downhill](https://github.com/lmjohns3/downhill) module and the `Abstract_Model` class.
+That's all you need to implement your own tensor factorization model! All gradient computation is handled by Theano auto-differentiation, and all the training functions by the [downhill](https://github.com/lmjohns3/downhill) module and the `Abstract_Model` class.
 
 
 
