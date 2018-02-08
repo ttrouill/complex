@@ -1,15 +1,11 @@
 import uuid
 import time
 import subprocess
-import xml.dom.minidom
-import cPickle as pickle
 import numpy as np
 
-
-from tools import *
-from evaluation import *
-import models
-
+from .tools import *
+from .evaluation import *
+from . import models
 
 class Experiment(object):
 
@@ -28,7 +24,7 @@ class Experiment(object):
 		self.entities_dict = entities_dict
 		self.relations_dict = relations_dict
 
-		if valid != None:
+		if valid is not None:
 			self.n_entities = len(np.unique(np.concatenate((train.indexes[:,0], train.indexes[:,2], valid.indexes[:,0], valid.indexes[:,2], test.indexes[:,0], test.indexes[:,2]))))
 			self.n_relations = len(np.unique(np.concatenate((train.indexes[:,1], valid.indexes[:,1], test.indexes[:,1]))))
 		else:
@@ -102,7 +98,7 @@ class Experiment(object):
 		"""
 		model, params = self.models[model_s]
 
-		if self.valid != None:
+		if self.valid is not None:
 			res = self.scorer.compute_scores(model, model_s, params, self.valid)
 			self.valid_results.add_res(res, model_s, params.embedding_size, params.lmbda, model.nb_params)
 
@@ -126,7 +122,7 @@ class Experiment(object):
 		Print best results on validation set, and corresponding scores (with same hyper params) on test set
 		"""
 		
-		logger.info( "Overall relations validation metrics:")
+		logger.info( "Validation metrics:")
 		metrics = self.valid_results.print_MRR_and_hits()
 
 		logger.info( "Corresponding per relation Test metrics:" )

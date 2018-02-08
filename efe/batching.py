@@ -1,4 +1,4 @@
-from tools import *
+from .tools import *
 
 
 class Batch_Loader(object):
@@ -10,8 +10,8 @@ class Batch_Loader(object):
 		self.neg_ratio = int(neg_ratio)
 		self.idx = 0
 
-		self.new_triples_indexes = np.empty((self.batch_size * (self.neg_ratio + 1) , 3)).astype(np.int64)
-		self.new_triples_values = np.empty((self.batch_size * (self.neg_ratio + 1 ))).astype(np.float32)
+		self.new_triples_indexes = np.empty((self.batch_size * (self.neg_ratio + 1) , 3), dtype=np.int64)
+		self.new_triples_values = np.empty((self.batch_size * (self.neg_ratio + 1 )), dtype=np.float32)
 
 	def __call__(self):
 

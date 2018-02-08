@@ -12,9 +12,9 @@ theano.config.floatX = data_type
 theano.config.mode = 'FAST_RUN' #  'Mode', 'ProfileMode'(deprecated), 'DebugMode', 'FAST_RUN', 'FAST_COMPILE'
 theano.config.exception_verbosity = 'high'
 
-from tools import *
-from batching import * 
-from evaluation import *
+from .tools import *
+from .batching import * 
+from .evaluation import *
 
 
 
@@ -82,7 +82,7 @@ class Abstract_Model(object):
 
 		train = Batch_Loader(train_triples, n_entities = max(self.n,self.l), batch_size = hparams.batch_size, neg_ratio = hparams.neg_ratio, contiguous_sampling = hparams.contiguous_sampling ) 
 		inputs=[self.ys, self.rows, self.cols, self.tubes]
-		if valid_triples != None:
+		if valid_triples is not None:
 			valid = Batch_Loader(valid_triples, n_entities = max(self.n,self.l), batch_size = hparams.batch_size, neg_ratio = hparams.neg_ratio, contiguous_sampling = hparams.contiguous_sampling ) 
 			#valid = [valid_triples.values[:], valid_triples.indexes[:,0], valid_triples.indexes[:,1], valid_triples.indexes[:,2]]
 		else:
@@ -120,7 +120,7 @@ class Abstract_Model(object):
 
 
 		#Check if need to redefine the loss function or not:
-		if redefine_loss or self.loss_to_opt == None:
+		if redefine_loss or self.loss_to_opt is None:
 
 			#Initialize parameters (child class overriding):
 			self.allocate_params()
@@ -171,8 +171,8 @@ class Abstract_Model(object):
 				learning_rate=hparams.learning_rate):
 
 
-			if it % hparams.valid_scores_every == 0 and scorer != None:
-				if valid_triples != None:
+			if it % hparams.valid_scores_every == 0 and scorer is not None:
+				if valid_triples is not None:
 					logger.info("Validation metrics:")
 					res = scorer.compute_scores(self, self.name, hparams, valid_triples)
 					cv_res = CV_Results()
@@ -397,7 +397,7 @@ class TransE_L2_Model(Abstract_Model):
 		train = TransE_Batch_Loader(self, train_triples, n_entities = max(self.n,self.l), batch_size = hparams.batch_size,
 				 neg_ratio = hparams.neg_ratio, contiguous_sampling = hparams.contiguous_sampling)  
 		inputs=[self.rows, self.cols, self.tubes]
-		if valid_triples != None:
+		if valid_triples is not None:
 			valid = Batch_Loader(valid_triples, n_entities = max(self.n,self.l), batch_size = hparams.batch_size, 
 					neg_ratio = hparams.neg_ratio, contiguous_sampling = hparams.contiguous_sampling)    
 		else:

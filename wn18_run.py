@@ -16,7 +16,7 @@ if __name__ =="__main__":
 	#SGD hyper-parameters:
 	params = Parameters(learning_rate = 0.5, 
 						max_iter = 1000, 
-						batch_size = len(wn18exp.train.values) / 100,  #Make 100 batches
+						batch_size = int(len(wn18exp.train.values) / 100),  #Make 100 batches
 						neg_ratio = 1, 
 						valid_scores_every = 50,
 						learning_rate_policy = 'adagrad',
@@ -41,7 +41,8 @@ if __name__ =="__main__":
 	#Then call a local grid search, here only with one value of rank and regularization
 	wn18exp.grid_search_on_all_models(all_params, embedding_size_grid = [emb_size], lmbda_grid = [lmbda], nb_runs = 1)
 
-
 	#Print best averaged metrics:
 	wn18exp.print_best_MRR_and_hits()
 
+	#Print best averaged metrics per relation:
+	wn18exp.print_best_MRR_and_hits_per_rel()

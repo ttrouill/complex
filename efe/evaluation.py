@@ -2,7 +2,7 @@ import operator
 import sklearn
 import sklearn.metrics
 
-from tools import *
+from .tools import *
 
 class Result(object):
 	"""
@@ -83,8 +83,9 @@ class CV_Results(object):
 			for i,(k, lmbdas) in enumerate(cur_res.items()):
 				for lmbda, res_list in lmbdas.items():
 					for res in res_list:
-						if res.ranks != None:
-							res = Result(res.preds[idxs], res.true_vals[idxs], res.ranks[idxs], res.raw_ranks[idxs])
+						if res.ranks is not None:
+							#Concat idxs on ranks as subject and object ranks are concatenated in a twice larger array
+							res = Result(res.preds[idxs], res.true_vals[idxs], res.ranks[np.concatenate((idxs,idxs))], res.raw_ranks[np.concatenate((idxs,idxs))])
 						else:
 							res = Result(res.preds[idxs], res.true_vals[idxs], None, None)
 						
@@ -174,7 +175,7 @@ class Scorer(object):
 		if self.compute_ranking_scores:
 			self.update_known_triples_dicts(train.indexes)
 			self.update_known_triples_dicts(test.indexes)
-			if valid != None:
+			if valid is not None:
 				self.update_known_triples_dicts(valid.indexes)
 
 

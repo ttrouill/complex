@@ -7,7 +7,7 @@ import colorsys
 cur_path = os.path.dirname(os.path.realpath( os.path.basename(__file__)))
 
 #Logging
-logger = logging.getLogger("SRL Bench")
+logger = logging.getLogger("EFE")
 logger.setLevel(logging.DEBUG)
 logger.propagate = False
 

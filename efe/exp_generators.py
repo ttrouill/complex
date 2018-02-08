@@ -1,9 +1,8 @@
 import scipy
 import scipy.io
 import random
-import cPickle
 
-from experiment import *
+from .experiment import *
 
 
 def parse_line(filename, line,i):
@@ -22,7 +21,7 @@ def load_triples_from_txt(filenames, entities_indexes = None, relations_indexes 
 	"""
 
 
-	if entities_indexes == None:
+	if entities_indexes is None:
 		entities_indexes= dict()
 		entities = set()
 		next_ent = 0
@@ -31,7 +30,7 @@ def load_triples_from_txt(filenames, entities_indexes = None, relations_indexes 
 		next_ent = max(entities_indexes.values()) + 1
 
 
-	if relations_indexes == None:
+	if relations_indexes is None:
 		relations_indexes= dict()
 		relations= set()
 		next_rel = 0
@@ -115,9 +114,9 @@ def build_data(name, path = '/home/ttrouill/dbfactor/projects/relational_bench/d
 					add_sameas_rel = False, parse_line = parse_line)
 
 
-	train = Triplets_set(np.array(train_triples.keys()), np.array(train_triples.values()))
-	valid = Triplets_set(np.array(valid_triples.keys()), np.array(valid_triples.values()))
-	test = Triplets_set(np.array(test_triples.keys()), np.array(test_triples.values()))
+	train = Triplets_set(np.array(list(train_triples.keys())), np.array(list(train_triples.values())))
+	valid = Triplets_set(np.array(list(valid_triples.keys())), np.array(list(valid_triples.values())))
+	test = Triplets_set(np.array(list(test_triples.keys())), np.array(list(test_triples.values())))
 
 
 	return Experiment(name,train, valid, test, positives_only = True, compute_ranking_scores = True, entities_dict = entities_indexes, relations_dict = relations_indexes)
