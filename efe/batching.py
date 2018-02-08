@@ -41,7 +41,7 @@ class Batch_Loader(object):
 
 			#Pre-sample everything, faster
 			rdm_entities = np.random.randint(0, self.n_entities, last_idx * self.neg_ratio)
-			rdm_choices = np.random.random(last_idx * self.neg_ratio)
+			rdm_choices = np.random.random(last_idx * self.neg_ratio) < 0.5
 			#Pre copying everyting
 			self.new_triples_indexes[last_idx:(last_idx*(self.neg_ratio+1)),:] = np.tile(self.new_triples_indexes[:last_idx,:],(self.neg_ratio,1))
 			self.new_triples_values[last_idx:(last_idx*(self.neg_ratio+1))] = np.tile(self.new_triples_values[:last_idx], self.neg_ratio)
@@ -50,7 +50,7 @@ class Batch_Loader(object):
 				for j in range(self.neg_ratio):
 					cur_idx = i* self.neg_ratio + j
 					#Sample a random subject or object 
-					if rdm_choices[cur_idx] < 0.5:
+					if rdm_choices[cur_idx]:
 						self.new_triples_indexes[last_idx + cur_idx,0] = rdm_entities[cur_idx]
 					else:
 						self.new_triples_indexes[last_idx + cur_idx,2] = rdm_entities[cur_idx]
