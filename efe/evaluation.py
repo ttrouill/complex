@@ -204,7 +204,7 @@ class Scorer(object):
 			ranks = np.empty( 2 * nb_test)
 			raw_ranks = np.empty(2 * nb_test)
 
-			if model_s.startswith("DistMult") or model_s.startswith("Complex") or model_s.startswith("CP") or model_s.startswith("TransE"):
+			if model_s.startswith("DistMult") or model_s.startswith("Complex") or model_s.startswith("CP") or model_s.startswith("TransE") or model_s.startswith("Rescal"):
 				#Fast super-ugly filtered metrics computation for Complex, DistMult, RESCAL and TransE
 				logger.info("Fast MRRs")
 
@@ -228,6 +228,10 @@ class Scorer(object):
 					return - np.sum(np.abs((e[i,:] + r[j,:]) - e ),1)
 				def transe_l1_eval_s(j,k):
 					return - np.sum(np.abs(e + (r[j,:] - e[k,:]) ),1)
+				def rescal_eval_o(i,j):
+					return (e[i,:].dot(r[j,:,:])).dot(e.T)
+				def rescal_eval_s(j,k):
+					return e.dot(r[j,:,:].dot(e[k,:]))
 				
 				if model_s.startswith("DistMult"):
 					e = model.e.get_value(borrow=True)
@@ -257,6 +261,11 @@ class Scorer(object):
 					r = model.r.get_value(borrow=True)
 					eval_o = transe_l1_eval_o
 					eval_s = transe_l1_eval_s
+				elif model_s.startswith("Rescal"):
+					e = model.e.get_value(borrow=True)
+					r = model.r.get_value(borrow=True)
+					eval_o = rescal_eval_o
+					eval_s = rescal_eval_s
 
 			else:
 				#Generic version to compute ranks given any model:

@@ -83,7 +83,7 @@ class Abstract_Model(object):
 		train = Batch_Loader(train_triples, n_entities = max(self.n,self.l), batch_size = hparams.batch_size, neg_ratio = hparams.neg_ratio, contiguous_sampling = hparams.contiguous_sampling ) 
 		inputs=[self.ys, self.rows, self.cols, self.tubes]
 		if valid_triples != None:
-			valid = Batch_Loader(valid_triples, n_entities = max(self.n,self.l), batch_size = len(valid_triples.values), neg_ratio = hparams.neg_ratio, contiguous_sampling = hparams.contiguous_sampling ) 
+			valid = Batch_Loader(valid_triples, n_entities = max(self.n,self.l), batch_size = hparams.batch_size, neg_ratio = hparams.neg_ratio, contiguous_sampling = hparams.contiguous_sampling ) 
 			#valid = [valid_triples.values[:], valid_triples.indexes[:,0], valid_triples.indexes[:,1], valid_triples.indexes[:,2]]
 		else:
 			valid = None
@@ -398,7 +398,7 @@ class TransE_L2_Model(Abstract_Model):
 				 neg_ratio = hparams.neg_ratio, contiguous_sampling = hparams.contiguous_sampling)  
 		inputs=[self.rows, self.cols, self.tubes]
 		if valid_triples != None:
-			valid = Batch_Loader(valid_triples, n_entities = max(self.n,self.l), batch_size = len(valid_triples.values), 
+			valid = Batch_Loader(valid_triples, n_entities = max(self.n,self.l), batch_size = hparams.batch_size, 
 					neg_ratio = hparams.neg_ratio, contiguous_sampling = hparams.contiguous_sampling)    
 		else:
 			valid = None
@@ -534,3 +534,55 @@ class Complex_Logistic_Model(Complex_Model):
 
 
 
+class Rescal_Model(Abstract_Model):
+	"""
+	Rescal model
+	"""
+
+	def __init__(self):
+		super(Rescal_Model, self).__init__()
+		
+		self.name = self.__class__.__name__
+		
+		self.r = None
+		self.e = None
+
+	def get_init_params(self):
+
+		params = { 'r' : randn(self.m, self.k, self.k),
+				   'e' : randn(max(self.n,self.l),self.k)  }
+		return params
+
+
+	def define_loss(self):
+
+		self.pred_func = TT.sum( TT.sum(self.e[self.rows,:,None] * self.r[self.cols,:,:], 1) *  self.e[self.tubes,:], 1)
+
+		self.loss = TT.sqr(self.ys - self.pred_func).mean()
+
+		self.regul_func = TT.sqr(self.e[self.rows,:]).mean() \
+						+ TT.sqr(self.r[self.cols,:,:]).mean() \
+						+ TT.sqr(self.e[self.tubes,:]).mean() 
+
+
+
+class Rescal_Logistic_Model(Rescal_Model):
+	"""
+	Rescal model with logistic loss
+	"""
+
+	def __init__(self):
+		super(Rescal_Logistic_Model, self).__init__()
+		
+		self.name = self.__class__.__name__
+
+
+	def define_loss(self):
+
+		self.pred_func = TT.nnet.sigmoid( TT.sum( TT.sum(self.e[self.rows,:,None] * self.r[self.cols,:,:], 1) *  self.e[self.tubes,:], 1) )
+
+		self.loss = TT.nnet.softplus( - self.ys * TT.sum( TT.sum(self.e[self.rows,:,None] * self.r[self.cols,:,:], 1) *  self.e[self.tubes,:], 1)).mean()
+
+		self.regul_func = TT.sqr(self.e[self.rows,:]).mean() \
+						+ TT.sqr(self.r[self.cols,:,:]).mean() \
+						+ TT.sqr(self.e[self.tubes,:]).mean() 

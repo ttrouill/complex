@@ -27,6 +27,7 @@ if __name__ =="__main__":
 	all_params = { "Complex_Logistic_Model" : params } ; emb_size = 150; lmbda =0.03;
 	#all_params = { "DistMult_Logistic_Model" : params } ; emb_size = 200; lmbda =0.003; params.learning_rate = 1.0
 	#all_params = { "CP_Logistic_Model" : params } ; emb_size = 100; lmbda =0.1; 
+	#all_params = { "Rescal_Logistic_Model" : params } ; emb_size = 50; lmbda =0.1
 	#all_params = { "TransE_L2_Model" : params } ; emb_size = 200; lmbda = 0.5 ; params.learning_rate=0.01
 
 
