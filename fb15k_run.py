@@ -1,7 +1,3 @@
-import logging
-logging.basicConfig()
-import downhill.base
-downhill.base.logging.setLevel(20)
 #import scipy.io
 
 import efe
