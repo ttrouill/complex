@@ -421,7 +421,7 @@ class TransE_L2_Model(Abstract_Model):
 		self.pred_func = - TT.sqrt(TT.sum(TT.sqr(self.e[self.rows,:] + self.r[self.cols,:] - self.e[self.tubes,:]),1))
 
 		self.loss = TT.maximum( 0, self.margin + TT.sqrt(TT.sum(TT.sqr(self.e[self.rows[:self.batch_size],:] + self.r[self.cols[:self.batch_size],:] - self.e[self.tubes[:self.batch_size],:]),1) ) \
-			- (1.0/self.neg_ratio) * TT.sum(TT.sqrt(TT.sum(TT.sqr(self.e[self.rows[self.batch_size:],:] + self.r[self.cols[self.batch_size:],:] - self.e[self.tubes[self.batch_size:],:]),1)).reshape((int(self.batch_size),int(self.neg_ratio))),1) ).mean()
+			- (1.0/self.neg_ratio) * TT.sum(TT.sqrt(TT.sum(TT.sqr(self.e[self.rows[self.batch_size:],:] + self.r[self.cols[self.batch_size:],:] - self.e[self.tubes[self.batch_size:],:]),1)).reshape((int(self.neg_ratio),int(self.batch_size))),0) ).mean()
 
 		#Maximum likelihood loss, performs worse.
 		#self.loss = TT.nnet.softplus( self.ys * TT.sqrt(TT.sum(TT.sqr(self.e[self.rows,:] + self.r[self.cols,:] - self.e[self.tubes,:]),1)) ).mean()
@@ -451,7 +451,7 @@ class TransE_L1_Model(TransE_L2_Model):
 		self.pred_func = - TT.sum(TT.abs_(self.e[self.rows,:] + self.r[self.cols,:] - self.e[self.tubes,:]),1)
 
 		self.loss = TT.maximum( 0, self.margin + TT.sum(TT.abs_(self.e[self.rows[:self.batch_size],:] + self.r[self.cols[:self.batch_size],:] - self.e[self.tubes[:self.batch_size],:]),1) \
-			- (1.0/self.neg_ratio) * TT.sum(TT.sum(TT.abs_(self.e[self.rows[self.batch_size:],:] + self.r[self.cols[self.batch_size:],:] - self.e[self.tubes[self.batch_size:],:]),1).reshape((int(self.batch_size),int(self.neg_ratio))),1) ).mean()
+			- (1.0/self.neg_ratio) * TT.sum(TT.sum(TT.abs_(self.e[self.rows[self.batch_size:],:] + self.r[self.cols[self.batch_size:],:] - self.e[self.tubes[self.batch_size:],:]),1).reshape((int(self.neg_ratio),int(self.batch_size))),0) ).mean()
 
 		self.regul_func = 0 
 
