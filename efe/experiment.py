@@ -90,7 +90,8 @@ class Experiment(object):
 
 		self.models[model_s] = (model, params)
 
-		model.fit(self.train, self.valid, params, self.n_entities, self.n_relations, self.n_entities, self.scorer)
+                #Pass a copy of the params object, for TransE handling of neg_ratio > 1
+		model.fit(self.train, self.valid, Parameters(**vars(params)), self.n_entities, self.n_relations, self.n_entities, self.scorer)
 
 	def test_model(self, model_s):
 		"""

@@ -408,7 +408,10 @@ class TransE_L2_Model(Abstract_Model):
 
 	def setup_params_for_train(self, train_triples, valid_triples, hparams, redefine_loss = False):
 		self.batch_size = hparams.batch_size
-		self.neg_ratio = float(hparams.neg_ratio)
+		if hparams.neg_ratio > 1:
+			hparams.max_iter *= hparams.neg_ratio
+			hparams.neg_ratio = 1
+			logger.warning("Using neg_ratio > 1 with TransE is like making more iterations, max_iter *= neg_ratio, max_iter is now " + str(hparams.max_iter))
 
 		self.margin = hparams.lmbda #Use for cross-validation since there is no need of regularization
 
@@ -421,7 +424,7 @@ class TransE_L2_Model(Abstract_Model):
 		self.pred_func = - TT.sqrt(TT.sum(TT.sqr(self.e[self.rows,:] + self.r[self.cols,:] - self.e[self.tubes,:]),1))
 
 		self.loss = TT.maximum( 0, self.margin + TT.sqrt(TT.sum(TT.sqr(self.e[self.rows[:self.batch_size],:] + self.r[self.cols[:self.batch_size],:] - self.e[self.tubes[:self.batch_size],:]),1) ) \
-			- (1.0/self.neg_ratio) * TT.sum(TT.sqrt(TT.sum(TT.sqr(self.e[self.rows[self.batch_size:],:] + self.r[self.cols[self.batch_size:],:] - self.e[self.tubes[self.batch_size:],:]),1)).reshape((int(self.neg_ratio),int(self.batch_size))),0) ).mean()
+			- TT.sqrt(TT.sum(TT.sqr(self.e[self.rows[self.batch_size:],:] + self.r[self.cols[self.batch_size:],:] - self.e[self.tubes[self.batch_size:],:]),1)) ).mean()
 
 		#Maximum likelihood loss, performs worse.
 		#self.loss = TT.nnet.softplus( self.ys * TT.sqrt(TT.sum(TT.sqr(self.e[self.rows,:] + self.r[self.cols,:] - self.e[self.tubes,:]),1)) ).mean()
@@ -451,7 +454,7 @@ class TransE_L1_Model(TransE_L2_Model):
 		self.pred_func = - TT.sum(TT.abs_(self.e[self.rows,:] + self.r[self.cols,:] - self.e[self.tubes,:]),1)
 
 		self.loss = TT.maximum( 0, self.margin + TT.sum(TT.abs_(self.e[self.rows[:self.batch_size],:] + self.r[self.cols[:self.batch_size],:] - self.e[self.tubes[:self.batch_size],:]),1) \
-			- (1.0/self.neg_ratio) * TT.sum(TT.sum(TT.abs_(self.e[self.rows[self.batch_size:],:] + self.r[self.cols[self.batch_size:],:] - self.e[self.tubes[self.batch_size:],:]),1).reshape((int(self.neg_ratio),int(self.batch_size))),0) ).mean()
+			- TT.sum(TT.abs_(self.e[self.rows[self.batch_size:],:] + self.r[self.cols[self.batch_size:],:] - self.e[self.tubes[self.batch_size:],:]),1) ).mean()
 
 		self.regul_func = 0 
 
